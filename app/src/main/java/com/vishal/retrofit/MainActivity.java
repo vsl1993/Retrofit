@@ -1,6 +1,7 @@
 package com.vishal.retrofit;
 
 import android.app.Dialog;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -21,30 +22,40 @@ public class MainActivity extends AppCompatActivity {
     ListView listView;
 
     List<User> users;
-    UserAdapter javaAdpter;
+    UserAdapter javaAdapter;
+    SwipeRefreshLayout swipeRefreshLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-         listView = (ListView) findViewById(R.id.list_view);
+        listView = (ListView) findViewById(R.id.list_view);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
 
         Retrofit retrofit = new Retrofit.Builder().baseUrl("http://jsonplaceholder.typicode.com")
                 .addConverterFactory(GsonConverterFactory.create()).build();
-        UserServices userServices = retrofit.create(UserServices.class);
+        final UserServices userServices = retrofit.create(UserServices.class);
 
 
         userServices.getUser().enqueue(new Callback<List<User>>() {
             @Override
             public void onResponse(Call<List<User>> call, Response<List<User>> response) {
-                 users = response.body();
-                javaAdpter = new UserAdapter(MainActivity.this,users);
-                listView.setAdapter(javaAdpter);
+                users = response.body();
+                javaAdapter = new UserAdapter(MainActivity.this, users);
+                listView.setAdapter(javaAdapter);
+
+                if (swipeRefreshLayout.isRefreshing()) {
+                    swipeRefreshLayout.setRefreshing(false);
+
+                }
+
             }
 
             @Override
             public void onFailure(Call<List<User>> call, Throwable t) {
-                Toast.makeText(MainActivity.this,"Please check your Network",Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, "Please check your Network", Toast.LENGTH_LONG).show();
+                swipeRefreshLayout.setEnabled(false);
             }
         });
 
@@ -53,14 +64,21 @@ public class MainActivity extends AppCompatActivity {
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 
                 users.remove(position);
-                javaAdpter.notifyDataSetChanged();
+                javaAdapter.notifyDataSetChanged();
 
                 return true;
             }
         });
 
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
 
+                userServices.getUser();
+                Toast.makeText(MainActivity.this, "Refresh", Toast.LENGTH_LONG).show();
 
-
+            }
+        });
     }
+
 }
