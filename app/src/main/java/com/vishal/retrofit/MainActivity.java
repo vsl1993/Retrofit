@@ -1,10 +1,12 @@
 package com.vishal.retrofit;
 
+import android.app.Dialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -36,19 +38,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<User>> call, Response<List<User>> response) {
                  users = response.body();
-
-
                 javaAdpter = new UserAdapter(MainActivity.this,users);
                 listView.setAdapter(javaAdpter);
-
-
-
-
             }
 
             @Override
             public void onFailure(Call<List<User>> call, Throwable t) {
-
+                Toast.makeText(MainActivity.this,"Please check your Network",Toast.LENGTH_LONG).show();
             }
         });
 
