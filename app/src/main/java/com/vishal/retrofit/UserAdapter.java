@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.vishal.retrofit.Sqlite.UserDBHelper;
+
 import java.util.List;
 
 /**
@@ -57,12 +59,9 @@ public class UserAdapter extends BaseAdapter {
         email.setText(user.getEmail());
         TextView city = (TextView) newlistView.findViewById(R.id.id_city);
         city.setText(user.getAddress().getCity());
-        TextView lng = (TextView) newlistView.findViewById(R.id.lag);
-        lng.setText(user.getAddress().getGeo().getLng());
-        TextView lat = (TextView) newlistView.findViewById(R.id.lat);
-        lat.setText(user.getAddress().getGeo().getLat());
-        TextView comp = (TextView) newlistView.findViewById(R.id.compney_id);
-        comp.setText(user.getCompany().toString());
+
+
+
 
 
         return newlistView;

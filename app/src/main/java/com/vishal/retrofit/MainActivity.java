@@ -1,13 +1,18 @@
 package com.vishal.retrofit;
 
 import android.app.Dialog;
+import android.content.ContentValues;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.vishal.retrofit.Sqlite.UserDBHelper;
 
 import java.util.List;
 
@@ -20,15 +25,16 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MainActivity extends AppCompatActivity {
 
     ListView listView;
-
     List<User> users;
     UserAdapter javaAdapter;
     SwipeRefreshLayout swipeRefreshLayout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         listView = (ListView) findViewById(R.id.list_view);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
@@ -42,6 +48,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<User>> call, Response<List<User>> response) {
                 users = response.body();
+                UserDBHelper userDBHelper = new UserDBHelper(MainActivity.this);
+                userDBHelper.inserUserIntoDatabase(users);
+
                 javaAdapter = new UserAdapter(MainActivity.this, users);
                 listView.setAdapter(javaAdapter);
 
@@ -58,6 +67,11 @@ public class MainActivity extends AppCompatActivity {
                 swipeRefreshLayout.setEnabled(false);
             }
         });
+
+
+
+
+
 
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
