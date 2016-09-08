@@ -25,21 +25,25 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemLongClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     List<User> users;
     UserDBHelper userDBHelper;
+    List<UserSqlite> arrayList;
+    UserAdapter userAdapter;
+    SwipeRefreshLayout swipeRefreshLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         addUserFromNetwork();
+        swipeRefreshLayout =(SwipeRefreshLayout)findViewById(R.id.swipe_refresh);
         userDBHelper = new UserDBHelper(this);
         Cursor cursor = userDBHelper.fetchUser();
         if(cursor.moveToFirst()){
 
-            List<UserSqlite> arrayList = new ArrayList<>();
+             arrayList = new ArrayList<>();
             do{
 
                 String name = cursor.getString(0);
@@ -50,13 +54,17 @@ public class MainActivity extends AppCompatActivity {
 
             }while (cursor.moveToNext());
 
-            UserAdapter userAdapter = new UserAdapter(this,arrayList);
+            userAdapter= new UserAdapter(this,arrayList);
             ListView listView = (ListView)findViewById(R.id.list_view);
             listView.setAdapter(userAdapter);
+            listView.setOnItemLongClickListener(this);
 
         }
+        swipeRefreshLayout.setOnRefreshListener(this);
 
     }
+
+
 
     public void addUserFromNetwork(){
         Retrofit retrofit = new Retrofit.Builder().baseUrl("http://jsonplaceholder.typicode.com")
@@ -82,4 +90,21 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+
+        arrayList.remove(position);
+        userAdapter.notifyDataSetChanged();
+        userDBHelper.deleteUser(arrayList.get(position).getName(),arrayList.get(position).getGmail(),arrayList.get(position).getCity());
+
+        return true;
+    }
+
+    @Override
+    public void onRefresh() {
+
+
+        Toast.makeText(MainActivity.this, "Refreshing", Toast.LENGTH_LONG).show();
+
+    }
 }

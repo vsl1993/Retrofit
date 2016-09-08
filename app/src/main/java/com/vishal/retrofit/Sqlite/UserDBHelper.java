@@ -62,6 +62,15 @@ public class UserDBHelper extends SQLiteOpenHelper {
         return sqLiteDatabase1.query(TABLE_NAME,projection,null,null,null,null,null);
     }
 
+    public void deleteUser(String name,String gmail,String city){
+
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        String where = NAME +"= ? AND "+GMAIL +"= ? AND "+CITY +"=?";
+        String[] args = {name,gmail,city};
+        sqLiteDatabase.delete(TABLE_NAME,where,args );
+
+    }
+
 
 
 
