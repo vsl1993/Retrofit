@@ -2,6 +2,7 @@ package com.vishal.retrofit.Sqlite;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -53,8 +54,14 @@ public class UserDBHelper extends SQLiteOpenHelper {
             sqLiteDatabase.insert(UserDBHelper.TABLE_NAME,null,contentValues);
             sqLiteDatabase.close();
         }
-        Log.e("database",i +"row inserted");
+        Log.v("database",i +"row inserted");
     }
+    public Cursor fetchUser(){
+        SQLiteDatabase sqLiteDatabase1 = this.getReadableDatabase();
+        String[] projection = {NAME,GMAIL,CITY};
+        return sqLiteDatabase1.query(TABLE_NAME,projection,null,null,null,null,null);
+    }
+
 
 
 

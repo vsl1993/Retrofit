@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.vishal.retrofit.Sqlite.UserDBHelper;
+import com.vishal.retrofit.Sqlite.UserSqlite;
 
 import java.util.List;
 
@@ -16,10 +17,10 @@ import java.util.List;
  */
 public class UserAdapter extends BaseAdapter {
 
-    List<User> users;
+    List<UserSqlite> users;
     Context context;
 
-    public UserAdapter(Context context, List<User> objects) {
+    public UserAdapter(Context context, List<UserSqlite> objects) {
         super();
         users = objects;
         this.context = context;
@@ -32,7 +33,7 @@ public class UserAdapter extends BaseAdapter {
     }
 
     @Override
-    public User getItem(int position) {
+    public UserSqlite getItem(int position) {
         return users.get(position);
     }
 
@@ -51,14 +52,14 @@ public class UserAdapter extends BaseAdapter {
 
         }
 
-        User user = getItem(position);
+        UserSqlite user = getItem(position);
         TextView name = (TextView) newlistView.findViewById(R.id.id_name);
         name.setText(user.getName());
 
         TextView email = (TextView) newlistView.findViewById(R.id.id_Email);
-        email.setText(user.getEmail());
+        email.setText(user.getGmail());
         TextView city = (TextView) newlistView.findViewById(R.id.id_city);
-        city.setText(user.getAddress().getCity());
+        city.setText(user.getCity());
 
 
 
