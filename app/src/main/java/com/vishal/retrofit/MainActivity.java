@@ -2,6 +2,7 @@ package com.vishal.retrofit;
 
 import android.app.Dialog;
 import android.content.ContentValues;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -37,7 +38,21 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        addUserFromNetwork();
+
+
+        boolean mboolean = false;
+
+        SharedPreferences settings = getSharedPreferences("PREFS_NAME", 0);
+        mboolean = settings.getBoolean("FIRST_RUN", false);
+        if (!mboolean) {
+            // do the thing for the first time
+            settings = getSharedPreferences("PREFS_NAME", 0);
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putBoolean("FIRST_RUN", true);
+            editor.commit();
+            addUserFromNetwork();
+        }
+
         swipeRefreshLayout =(SwipeRefreshLayout)findViewById(R.id.swipe_refresh);
         userDBHelper = new UserDBHelper(this);
         Cursor cursor = userDBHelper.fetchUser();
