@@ -10,6 +10,7 @@ import android.util.Log;
 
 import com.vishal.retrofit.User;
 
+import java.text.StringCharacterIterator;
 import java.util.List;
 
 /**
@@ -59,6 +60,18 @@ public class UserDBHelper extends SQLiteOpenHelper {
             sqLiteDatabase.close();
         }
         Log.v("database",i +"row inserted");
+    }
+    public  void  inserUser(String name,String gmail,String city){
+
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(UserDBHelper.NAME,name);
+        contentValues.put(UserDBHelper.NAME,name);
+        contentValues.put(UserDBHelper.GMAIL,gmail);
+        contentValues.put(UserDBHelper.CITY,city);
+        sqLiteDatabase.insert(UserDBHelper.TABLE_NAME,null,contentValues);
+        sqLiteDatabase.close();
+
     }
     public Cursor fetchUser(){
         SQLiteDatabase sqLiteDatabase1 = this.getReadableDatabase();

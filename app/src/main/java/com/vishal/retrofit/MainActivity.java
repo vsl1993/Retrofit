@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -33,10 +34,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     List<UserSqlite> arrayList;
     UserAdapter userAdapter;
     SwipeRefreshLayout swipeRefreshLayout;
+    EditText name,gmail,city;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        name = (EditText)findViewById(R.id.name_id);
+        gmail= (EditText)findViewById(R.id.gmail_id);
+        city = (EditText)findViewById(R.id.city_id);
 
 
 
@@ -100,8 +106,20 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             @Override
             public void onFailure(Call<List<User>> call, Throwable t) {
                 Toast.makeText(MainActivity.this, "Please check your Network", Toast.LENGTH_LONG).show();
+                swipeRefreshLayout.setEnabled(false);
             }
         });
+
+    }
+
+    public void addUser(View view){
+
+        String name1 = name.getText().toString();
+        String gmail1 = gmail.getText().toString();
+        String city1 = city.getText().toString();
+        userDBHelper.inserUser(name1,gmail1,city1);
+        Toast.makeText(this,"user is added",Toast.LENGTH_LONG).show();
+
 
     }
 
