@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     UserAdapter userAdapter;
     SwipeRefreshLayout swipeRefreshLayout;
     EditText name,gmail,city;
+    ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         name = (EditText)findViewById(R.id.name_id);
         gmail= (EditText)findViewById(R.id.gmail_id);
         city = (EditText)findViewById(R.id.city_id);
+        listView = (ListView)findViewById(R.id.list_view);
 
 
 
@@ -61,10 +64,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         swipeRefreshLayout =(SwipeRefreshLayout)findViewById(R.id.swipe_refresh);
         userDBHelper = new UserDBHelper(this);
+        getUserFromDatabase();
+        swipeRefreshLayout.setOnRefreshListener(this);
+
+    }
+    public void getUserFromDatabase(){
         Cursor cursor = userDBHelper.fetchUser();
         if(cursor.moveToFirst()){
 
-             arrayList = new ArrayList<>();
+            arrayList = new ArrayList<>();
             do{
 
                 String name = cursor.getString(0);
@@ -76,14 +84,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }while (cursor.moveToNext());
 
             userAdapter= new UserAdapter(this,arrayList);
-            ListView listView = (ListView)findViewById(R.id.list_view);
+
             listView.setAdapter(userAdapter);
             listView.setOnItemLongClickListener(this);
 
         }
-        swipeRefreshLayout.setOnRefreshListener(this);
+
 
     }
+
 
 
 
@@ -117,25 +126,46 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         String name1 = name.getText().toString();
         String gmail1 = gmail.getText().toString();
         String city1 = city.getText().toString();
-        userDBHelper.inserUser(name1,gmail1,city1);
-        Toast.makeText(this,"user is added",Toast.LENGTH_LONG).show();
+
+        if(TextUtils.isEmpty(name1) || TextUtils.isEmpty(gmail1) || TextUtils.isEmpty(city1) ){
+            if(TextUtils.isEmpty(name1)){
+                name.setError("Pls add name");
+            }
+            if(TextUtils.isEmpty(gmail1)){
+                gmail.setError("Pls add gmail");
+            }
+            if(TextUtils.isEmpty(city1)){
+                city.setError("Pls add city");
+            }
+
+
+        }else {
+            userDBHelper.inserUser(name1,gmail1,city1);
+            getUserFromDatabase();
+            name.setText("");
+            gmail.setText("");
+            city.setText("");
+            Toast.makeText(this,"user is added",Toast.LENGTH_LONG).show();
+
+
+        }
 
 
     }
 
+
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 
+        userDBHelper.deleteUser(arrayList.get(position).getName(),arrayList.get(position).getGmail(),arrayList.get(position).getCity());
         arrayList.remove(position);
         userAdapter.notifyDataSetChanged();
-        userDBHelper.deleteUser(arrayList.get(position).getName(),arrayList.get(position).getGmail(),arrayList.get(position).getCity());
-
         return true;
     }
 
     @Override
     public void onRefresh() {
-
+        getUserFromDatabase();
 
         Toast.makeText(MainActivity.this, "Refreshing", Toast.LENGTH_LONG).show();
 
