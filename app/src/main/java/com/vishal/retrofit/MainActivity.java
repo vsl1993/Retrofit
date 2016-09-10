@@ -2,6 +2,7 @@ package com.vishal.retrofit;
 
 import android.app.Dialog;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -28,7 +29,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MainActivity extends AppCompatActivity implements AdapterView.OnItemLongClickListener, SwipeRefreshLayout.OnRefreshListener {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemLongClickListener, SwipeRefreshLayout.OnRefreshListener, AdapterView.OnItemClickListener {
 
     List<User> users;
     UserDBHelper userDBHelper;
@@ -37,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     SwipeRefreshLayout swipeRefreshLayout;
     EditText name,gmail,city;
     ListView listView;
+    public static final String SEND_ARRAY_KEY = "arryalist";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         getUserFromDatabase();
         swipeRefreshLayout.setOnRefreshListener(this);
 
+
     }
     public void getUserFromDatabase(){
         Cursor cursor = userDBHelper.fetchUser();
@@ -87,6 +90,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
             listView.setAdapter(userAdapter);
             listView.setOnItemLongClickListener(this);
+            listView.setOnItemClickListener(this);
 
         }
 
@@ -168,6 +172,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         getUserFromDatabase();
 
         Toast.makeText(MainActivity.this, "Refreshing", Toast.LENGTH_LONG).show();
+
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Intent intent = new Intent(this,UserDetailActivity.class);
+        intent.putExtra("name",arrayList.get(position).getName());
+        intent.putExtra("gmail",arrayList.get(position).getGmail());
+        intent.putExtra("city",arrayList.get(position).getCity());
+        startActivity(intent);
 
     }
 }
