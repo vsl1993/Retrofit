@@ -137,12 +137,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     }
 
-    public void onCick(View view) {
-
-
-    }
-
-
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 
