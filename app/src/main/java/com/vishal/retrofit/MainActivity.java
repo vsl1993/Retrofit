@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     List<UserSqlite> arrayList;
     UserAdapter userAdapter;
     SwipeRefreshLayout swipeRefreshLayout;
-    EditText name,gmail,city;
+    EditText name, gmail, city;
     ListView listView;
     public static final String SEND_ARRAY_KEY = "arryalist";
 
@@ -44,11 +44,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        name = (EditText)findViewById(R.id.name_id);
-        gmail= (EditText)findViewById(R.id.gmail_id);
-        city = (EditText)findViewById(R.id.city_id);
-        listView = (ListView)findViewById(R.id.list_view);
-
+        name = (EditText) findViewById(R.id.name_id);
+        gmail = (EditText) findViewById(R.id.gmail_id);
+        city = (EditText) findViewById(R.id.city_id);
+        listView = (ListView) findViewById(R.id.list_view);
 
 
         boolean mboolean = false;
@@ -63,44 +62,27 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             editor.commit();
             addUserFromNetwork();
         }
-
-        swipeRefreshLayout =(SwipeRefreshLayout)findViewById(R.id.swipe_refresh);
-        userDBHelper = new UserDBHelper(this);
         getUserFromDatabase();
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
         swipeRefreshLayout.setOnRefreshListener(this);
 
 
     }
-    public void getUserFromDatabase(){
-        Cursor cursor = userDBHelper.fetchUser();
-        if(cursor.moveToFirst()){
 
-            arrayList = new ArrayList<>();
-            do{
+    public void getUserFromDatabase() {
 
-                String name = cursor.getString(0);
-                String gmail = cursor.getString(1);
-                String city = cursor.getString(2);
-                UserSqlite userSqlite = new UserSqlite(name,gmail,city);
-                arrayList.add(userSqlite);
-
-            }while (cursor.moveToNext());
-
-            userAdapter= new UserAdapter(this,arrayList);
-
-            listView.setAdapter(userAdapter);
-            listView.setOnItemLongClickListener(this);
-            listView.setOnItemClickListener(this);
-
-        }
+        userDBHelper = new UserDBHelper(this);
+        arrayList = userDBHelper.getUser();
+        userAdapter = new UserAdapter(this, arrayList);
+        listView.setAdapter(userAdapter);
+        listView.setOnItemLongClickListener(this);
+        listView.setOnItemClickListener(this);
 
 
     }
 
 
-
-
-    public void addUserFromNetwork(){
+    public void addUserFromNetwork() {
         Retrofit retrofit = new Retrofit.Builder().baseUrl("http://jsonplaceholder.typicode.com")
                 .addConverterFactory(GsonConverterFactory.create()).build();
         final UserServices userServices = retrofit.create(UserServices.class);
@@ -125,34 +107,37 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     }
 
-    public void addUser(View view){
+    public void addUser(View view) {
 
         String name1 = name.getText().toString();
         String gmail1 = gmail.getText().toString();
         String city1 = city.getText().toString();
 
-        if(TextUtils.isEmpty(name1) || TextUtils.isEmpty(gmail1) || TextUtils.isEmpty(city1) ){
-            if(TextUtils.isEmpty(name1)){
+        if (TextUtils.isEmpty(name1) || TextUtils.isEmpty(gmail1) || TextUtils.isEmpty(city1)) {
+            if (TextUtils.isEmpty(name1)) {
                 name.setError("Pls add name");
             }
-            if(TextUtils.isEmpty(gmail1)){
+            if (TextUtils.isEmpty(gmail1)) {
                 gmail.setError("Pls add gmail");
             }
-            if(TextUtils.isEmpty(city1)){
+            if (TextUtils.isEmpty(city1)) {
                 city.setError("Pls add city");
             }
 
 
-        }else {
-            userDBHelper.inserUser(name1,gmail1,city1);
+        } else {
+            userDBHelper.inserUser(name1, gmail1, city1);
             getUserFromDatabase();
             name.setText("");
             gmail.setText("");
             city.setText("");
-            Toast.makeText(this,"user is added",Toast.LENGTH_LONG).show();
-
 
         }
+
+
+    }
+
+    public void onCick(View view) {
 
 
     }
@@ -161,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 
-        userDBHelper.deleteUser(arrayList.get(position).getName(),arrayList.get(position).getGmail(),arrayList.get(position).getCity());
+        userDBHelper.deleteUser(arrayList.get(position).getName(), arrayList.get(position).getGmail(), arrayList.get(position).getCity());
         arrayList.remove(position);
         userAdapter.notifyDataSetChanged();
         return true;
@@ -170,17 +155,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onRefresh() {
         getUserFromDatabase();
-
-        Toast.makeText(MainActivity.this, "Refreshing", Toast.LENGTH_LONG).show();
-
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Intent intent = new Intent(this,UserDetailActivity.class);
-        intent.putExtra("name",arrayList.get(position).getName());
-        intent.putExtra("gmail",arrayList.get(position).getGmail());
-        intent.putExtra("city",arrayList.get(position).getCity());
+        Intent intent = new Intent(this, UserDetailActivity.class);
+        intent.putExtra("pos", id);
         startActivity(intent);
 
     }

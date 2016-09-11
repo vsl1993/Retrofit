@@ -10,21 +10,26 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.vishal.retrofit.UserDetailActivity">
 
-    <TextView
+    <android.support.v4.view.ViewPager
+        android:id="@+id/view_pager_id"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="25dp"
-        android:id="@+id/name_detail_id"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/gmail_detail_id"
-        android:textSize="25dp"/>
-    <TextView
-        android:id="@+id/city_id_detail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="25dp"/>
+        android:layout_height="match_parent"></android.support.v4.view.ViewPager>
+
+    <!--<TextView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:textSize="25dp"-->
+        <!--android:id="@+id/name_detail_id"/>-->
+    <!--<TextView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:id="@+id/gmail_detail_id"-->
+        <!--android:textSize="25dp"/>-->
+    <!--<TextView-->
+        <!--android:id="@+id/city_id_detail"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:textSize="25dp"/>-->
 
 
 </LinearLayout>

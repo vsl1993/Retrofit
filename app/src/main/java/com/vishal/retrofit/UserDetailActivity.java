@@ -1,27 +1,38 @@
 package com.vishal.retrofit;
 
 import android.content.Intent;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
+
+import com.vishal.retrofit.Sqlite.CustomSwipeAdapter;
+import com.vishal.retrofit.Sqlite.UserDBHelper;
+import com.vishal.retrofit.Sqlite.UserSqlite;
 
 import org.w3c.dom.Text;
 
+import java.util.List;
+
 public class UserDetailActivity extends AppCompatActivity {
+
+    private ViewPager viewPager;
+    private CustomSwipeAdapter customSwipeAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_detail);
-        TextView name = (TextView)findViewById(R.id.name_detail_id);
-        TextView gmail = (TextView)findViewById(R.id.gmail_detail_id);
-        TextView city = (TextView)findViewById(R.id.city_id_detail);
-        Intent intent = getIntent();
-        name.setText(intent.getExtras().getString("name"));
-        gmail.setText(intent.getExtras().getString("gmail"));
-        city.setText(intent.getExtras().getString("city"));
+        Intent intent=getIntent();
+        long position = intent.getExtras().getLong("pos");
 
-
+        viewPager = (ViewPager)findViewById(R.id.view_pager_id);
+        UserDBHelper userDBHelper = new UserDBHelper(this);
+        List<UserSqlite> arrayList = userDBHelper.getUser();
+        customSwipeAdapter = new CustomSwipeAdapter(this,arrayList);
+        viewPager.setAdapter(customSwipeAdapter);
+        viewPager.setCurrentItem((int) position);
 
     }
 }
