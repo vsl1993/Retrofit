@@ -25,14 +25,14 @@ public class UserDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_detail);
         Intent intent=getIntent();
-        long position = intent.getExtras().getLong("pos");
+        int position = intent.getExtras().getInt("res");
 
         viewPager = (ViewPager)findViewById(R.id.view_pager_id);
         UserDBHelper userDBHelper = new UserDBHelper(this);
         List<UserSqlite> arrayList = userDBHelper.getUser();
         customSwipeAdapter = new CustomSwipeAdapter(this,arrayList);
         viewPager.setAdapter(customSwipeAdapter);
-        viewPager.setCurrentItem((int) position);
+        viewPager.setCurrentItem(position);
 
     }
 }

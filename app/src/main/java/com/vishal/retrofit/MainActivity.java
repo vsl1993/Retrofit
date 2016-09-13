@@ -9,6 +9,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -29,7 +31,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MainActivity extends AppCompatActivity implements AdapterView.OnItemLongClickListener, SwipeRefreshLayout.OnRefreshListener, AdapterView.OnItemClickListener {
+public class MainActivity extends AppCompatActivity implements  SwipeRefreshLayout.OnRefreshListener {
 
     List<User> users;
     UserDBHelper userDBHelper;
@@ -37,7 +39,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     UserAdapter userAdapter;
     SwipeRefreshLayout swipeRefreshLayout;
     EditText name, gmail, city;
-    ListView listView;
+    RecyclerView recyclerView;
+
     public static final String SEND_ARRAY_KEY = "arryalist";
 
     @Override
@@ -47,8 +50,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         name = (EditText) findViewById(R.id.name_id);
         gmail = (EditText) findViewById(R.id.gmail_id);
         city = (EditText) findViewById(R.id.city_id);
-        listView = (ListView) findViewById(R.id.list_view);
 
+        recyclerView = (RecyclerView)findViewById(R.id.recycle_view_id);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
 
         boolean mboolean = false;
 
@@ -63,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             addUserFromNetwork();
         }
         getUserFromDatabase();
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
+
         swipeRefreshLayout.setOnRefreshListener(this);
 
 
@@ -74,9 +78,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         userDBHelper = new UserDBHelper(this);
         arrayList = userDBHelper.getUser();
         userAdapter = new UserAdapter(this, arrayList);
-        listView.setAdapter(userAdapter);
-        listView.setOnItemLongClickListener(this);
-        listView.setOnItemClickListener(this);
+        recyclerView.setAdapter(userAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+
+
+
+
 
 
     }
@@ -137,14 +145,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     }
 
-    @Override
-    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-
-        userDBHelper.deleteUser(arrayList.get(position).getName(), arrayList.get(position).getGmail(), arrayList.get(position).getCity());
-        arrayList.remove(position);
-        userAdapter.notifyDataSetChanged();
-        return true;
-    }
+//    @Override
+//    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+//
+//        userDBHelper.deleteUser(arrayList.get(position).getName(), arrayList.get(position).getGmail(), arrayList.get(position).getCity());
+//        arrayList.remove(position);
+//        userAdapter.notifyDataSetChanged();
+//        return true;
+//    }
 
     @Override
     public void onRefresh() {
@@ -152,11 +160,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         swipeRefreshLayout.setRefreshing(false);
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Intent intent = new Intent(this, UserDetailActivity.class);
-        intent.putExtra("pos", id);
-        startActivity(intent);
 
-    }
+
+//    @Override
+//    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//        Intent intent = new Intent(this, UserDetailActivity.class);
+//        intent.putExtra("pos", id);
+//        startActivity(intent);
+//
+//    }
 }
