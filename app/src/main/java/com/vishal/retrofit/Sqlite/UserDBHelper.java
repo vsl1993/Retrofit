@@ -43,7 +43,7 @@ public class UserDBHelper extends SQLiteOpenHelper {
     }
 
 
-    public void inserUserIntoDatabase(List<User> users) {
+    public void insertUserIntoDatabase(List<User> users) {
 
 
         int i;
@@ -76,7 +76,7 @@ public class UserDBHelper extends SQLiteOpenHelper {
 
     }
 
-    public List<UserSqlite> getUser() {
+    public  List<UserSqlite> getUser() {
         SQLiteDatabase sqLiteDatabase1 = this.getReadableDatabase();
         List<UserSqlite> arrayList = new ArrayList<>();
         String[] projection = {NAME, GMAIL, CITY};

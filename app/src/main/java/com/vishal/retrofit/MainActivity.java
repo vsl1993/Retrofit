@@ -1,30 +1,29 @@
 package com.vishal.retrofit;
 
-import android.app.Dialog;
-import android.content.ContentValues;
-import android.content.Intent;
+
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
+
 import android.view.View;
-import android.widget.AdapterView;
+
 import android.widget.EditText;
-import android.widget.ListView;
+
 import android.widget.Toast;
 
 import com.vishal.retrofit.Sqlite.UserDBHelper;
 import com.vishal.retrofit.Sqlite.UserSqlite;
 
-import java.util.ArrayList;
+
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -37,22 +36,19 @@ public class MainActivity extends AppCompatActivity implements  SwipeRefreshLayo
     UserDBHelper userDBHelper;
     List<UserSqlite> arrayList;
     UserAdapter userAdapter;
-    SwipeRefreshLayout swipeRefreshLayout;
-    EditText name, gmail, city;
-    RecyclerView recyclerView;
+    @BindView(R.id.swipe_refresh) SwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.name_id) EditText name;
+    @BindView(R.id.gmail_id) EditText gmail;
+    @BindView(R.id.city_id) EditText city;
+    @BindView(R.id.recycle_view_id) RecyclerView recyclerView;
 
-    public static final String SEND_ARRAY_KEY = "arryalist";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        name = (EditText) findViewById(R.id.name_id);
-        gmail = (EditText) findViewById(R.id.gmail_id);
-        city = (EditText) findViewById(R.id.city_id);
-
-        recyclerView = (RecyclerView)findViewById(R.id.recycle_view_id);
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
+        ButterKnife.bind(this);
 
         boolean mboolean = false;
 
@@ -84,9 +80,6 @@ public class MainActivity extends AppCompatActivity implements  SwipeRefreshLayo
 
 
 
-
-
-
     }
 
 
@@ -101,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements  SwipeRefreshLayo
             public void onResponse(Call<List<User>> call, Response<List<User>> response) {
                 users = response.body();
                 userDBHelper = new UserDBHelper(MainActivity.this);
-                userDBHelper.inserUserIntoDatabase(users);
+                userDBHelper.insertUserIntoDatabase(users);
                 Toast.makeText(MainActivity.this, "Users is inserted in database", Toast.LENGTH_LONG).show();
 
             }
@@ -145,14 +138,7 @@ public class MainActivity extends AppCompatActivity implements  SwipeRefreshLayo
 
     }
 
-//    @Override
-//    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-//
-//        userDBHelper.deleteUser(arrayList.get(position).getName(), arrayList.get(position).getGmail(), arrayList.get(position).getCity());
-//        arrayList.remove(position);
-//        userAdapter.notifyDataSetChanged();
-//        return true;
-//    }
+
 
     @Override
     public void onRefresh() {
@@ -161,12 +147,4 @@ public class MainActivity extends AppCompatActivity implements  SwipeRefreshLayo
     }
 
 
-
-//    @Override
-//    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//        Intent intent = new Intent(this, UserDetailActivity.class);
-//        intent.putExtra("pos", id);
-//        startActivity(intent);
-//
-//    }
 }

@@ -19,6 +19,10 @@ import org.w3c.dom.UserDataHandler;
 import java.util.Collections;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+
 /**
  * Created by Minuteman on 8/26/2016.
  */
@@ -32,16 +36,18 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> 
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder  {
-        TextView name,gmail,city;
+        @BindView(R.id.id_name)  TextView name;
+        @BindView(R.id.id_Email)  TextView gmail;
+        @BindView(R.id.id_city)  TextView city;
+        private Unbinder unbinder;
+
         View mView;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             mView = itemView;
+            unbinder = ButterKnife.bind(this,itemView);
 
-            name = (TextView)itemView.findViewById(R.id.id_name);
-            gmail = (TextView)itemView.findViewById(R.id.id_Email);
-            city = (TextView)itemView.findViewById(R.id.id_city);
 
 
         }

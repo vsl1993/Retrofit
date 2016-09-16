@@ -13,6 +13,9 @@ import com.vishal.retrofit.R;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by MUCHHA on 9/10/2016.
  */
@@ -21,6 +24,9 @@ public class CustomSwipeAdapter extends PagerAdapter {
     List<UserSqlite> arrayData;
     private Context context;
     private LayoutInflater layoutInflater;
+    @BindView(R.id.name_detail_id) TextView name;
+    @BindView(R.id.gmail_detail_id) TextView gmail;
+    @BindView(R.id.city_detail_id) TextView city;
 
 
 
@@ -47,9 +53,12 @@ public class CustomSwipeAdapter extends PagerAdapter {
         View item_view = layoutInflater.inflate(R.layout.swipe_layout, container, false);
 
 
-        TextView name = (TextView) item_view.findViewById(R.id.name_detail_id);
-        TextView gmail = (TextView) item_view.findViewById(R.id.gmail_detail_id);
-        TextView city = (TextView) item_view.findViewById(R.id.city_detail_id);
+        ButterKnife.bind(this,item_view);
+
+
+//        TextView name = (TextView) item_view.findViewById(R.id.name_detail_id);
+//        TextView gmail = (TextView) item_view.findViewById(R.id.gmail_detail_id);
+//        TextView city = (TextView) item_view.findViewById(R.id.city_detail_id);
         name.setText(arrayData.get(position).getName());
         gmail.setText(arrayData.get(position).getGmail());
         city.setText(arrayData.get(position).getCity());
