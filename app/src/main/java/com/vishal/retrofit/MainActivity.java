@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements  SwipeRefreshLayo
     UserDBHelper userDBHelper;
     List<UserSqlite> arrayList;
     UserAdapter userAdapter;
+    //used butternie lib
     @BindView(R.id.swipe_refresh) SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.name_id) EditText name;
     @BindView(R.id.gmail_id) EditText gmail;
@@ -44,11 +45,14 @@ public class MainActivity extends AppCompatActivity implements  SwipeRefreshLayo
 
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+
 
         boolean mboolean = false;
 
